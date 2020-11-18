@@ -2,7 +2,12 @@
   "name": "octyne-api",
   "version": "1.0.0-alpha.1",
   "description": "A Node.js API wrapper for retrixe/octyne.",
+  "type": "commonjs",
   "main": "src/index.js",
+  "exports": {
+    "import": "src/esm.mjs",
+    "require": "src/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,3 +34,4 @@
     "ws": "^7.3.1"
   }
 }
+
