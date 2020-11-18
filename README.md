@@ -1,6 +1,6 @@
 # octyne-api
 
-TODO put a fancy badge
+[![requires node.js: >=10](https://img.shields.io/badge/requires%20node.js-%3E%3D10-brightgreen.png?style=flat-square&logo=node.js&logoColor=76D04B)](https://nodejs.org/en/download) [![browsers: not yet supported](https://img.shields.io/badge/browsers-not%20*yet*%20supported-aqua?style=flat-square&logo=javascript&logoColor=aqua)](https://shields.io/)
 
 A Node.js API wrapper for retrixe/octyne.
 
