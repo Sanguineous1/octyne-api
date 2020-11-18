@@ -1,14 +1,23 @@
-// const WebSocket = require('ws')
+const WebSocket = require('ws')
 const fetch = require('node-fetch')
 const path = require('path')
 
 class Client {
-  constructor (info) {
-    this.info = { url: info.url, username: info.username }
-    Object.defineProperty(this.info, '_password', {
-      value: info.password,
-      enumerable: false
-    })
+  constructor (url, info) {
+    this.info = { url: info.url, username: info.username || undefined }
+    if (this.info.password) {
+      Object.defineProperty(this.info, '_password', {
+        value: info.password,
+        enumerable: false
+      })
+    }
+    if (this.info.token) {
+      Object.defineProperty(this.info, '_token', {
+        value: info.token,
+        enumerable: false,
+        configurable: true
+      })
+    }
   }
 
   async getServers () {
@@ -40,6 +49,23 @@ class Client {
     }
   }
 
+  async openConsole (server) {
+    const url = this.info.url
+    return new Promise((resolve, reject) => {
+      const ws = new WebSocket(url + '/server/' + server + '/console', {
+        headers: { authorization: this.info._token }
+      })
+      let open = false
+      ws.on('open', () => {
+        open = true
+        resolve(ws)
+      })
+      ws.on('error', (err) => {
+        if (!open) reject(err)
+      })
+    })
+  }
+
   async startServer (server) {
     const res = await this.request(this.info.url + '/server/' + server, { method: 'POST', body: 'start' })
     if (res.error) {
@@ -51,6 +77,28 @@ class Client {
     const res = await this.request(this.info.url + '/server/' + server, { method: 'POST', body: 'stop' })
     if (res.error) {
       throw new Error(res.error)
+    }
+  }
+
+  async getFile (server, file, stream) {
+    const path = encodeURIComponent(file)
+    if (this.info._token) {
+      const req = await fetch(this.info.url + '/server/' + server + '/file?path=' + path, {
+        method: 'GET',
+        headers: { authorization: this.info._token }
+      })
+      if (stream) {
+        return req.body
+      }
+      const buffer = await req.buffer()
+      if (req.ok) return buffer
+      const json = JSON.parse(buffer.toString('utf8'))
+      if (json && json.error) {
+        throw new Error(json.error)
+      }
+      return buffer
+    } else {
+      throw new Error('No token is present in the client. Have you logged in with client.login()?')
     }
   }
 
@@ -88,7 +136,7 @@ class Client {
 
   renameFile (server, oldpath, newname) {
     const newName = path.join(oldpath, '..', newname)
-    this.moveFile(server, oldpath, newName)
+    return this.moveFile(server, oldpath, newName)
   }
 
   async deleteFile (server, directory) {
@@ -112,12 +160,13 @@ class Client {
     if (this.info._token) {
       return fetch(endpoint, {
         ...(opts || {}),
-        headers: Object.assign({ Authorization: this.info._token }, opts.headers)
+        headers: Object.assign({ Authorization: this.info._token }, opts && opts.headers)
       }).then(res => res.json())
     } else {
-      throw new Error('You need to be logged in to do this')
+      throw new Error('No token is present in the client. Have you logged in with client.login()?')
     }
   }
 }
 
 module.exports = Client
+
