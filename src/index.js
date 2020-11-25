@@ -4,7 +4,7 @@ const path = require('path')
 
 class Client {
   constructor (url, info) {
-    this.info = { url: info.url, username: info.username || undefined }
+    this.info = { url: url, username: info.username || undefined }
     if (this.info.password) {
       Object.defineProperty(this.info, '_password', {
         value: info.password,
@@ -168,5 +168,9 @@ class Client {
   }
 }
 
-module.exports = Client
+function OctyneClient(url, info) { // Avoid setting these properties on Client.
+    return new Client(url, info)
+}
+OctyneClient.Client = Client
 
+module.exports = OctyneClient // Prefer importing it as OctyneApi, though.

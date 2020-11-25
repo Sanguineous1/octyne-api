@@ -1,5 +1,7 @@
-import Client from './index.js'
+import OctyneApi from './index.js'
 
-export Client
-export default Client
+export const { Client } = OctyneApi
 
+export default function (url, info) {
+  return new Client(url, info)
+}

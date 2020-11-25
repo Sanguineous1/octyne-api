@@ -25,7 +25,7 @@ export class Client {
   logout(): Promise<void>;
   request(endpoint: string, opts?: RequestInit): Promise<object>;
   getServer(server: string): Promise<Server>;
-  getServers(): Promise<Array<{ [name: string]: ServerStatus }>;
+  getServers(): Promise<Array<{ [name: string]: ServerStatus }>>;
 
   startServer(server: string): Promise<void>;
   stopServer(server: string): Promise<void>;
@@ -40,5 +40,6 @@ export class Client {
   deleteFile(server: string, directory: string): Promise<void>;  
 }
 
-export = Client
+declare function OctyneApi(url: string, info: ClientInfo): Client
 
+export = OctyneApi
