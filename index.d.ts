@@ -23,7 +23,7 @@ export class Client {
   constructor(url: string, info: ClientInfo);
   login(): Promise<void>;
   logout(): Promise<void>;
-  request(endpoint: string, opts?: RequestInit): Promise<object>;
+  request(endpoint: string, options?: RequestInit): Promise<object>;
   getServer(server: string): Promise<Server>;
   getServers(): Promise<Array<{ [name: string]: ServerStatus }>>;
 
@@ -31,13 +31,13 @@ export class Client {
   stopServer(server: string): Promise<void>;
   openConsole(server: string): Promise<WebSocket>;
 
-  getFile(server: string, file: string, stream?: boolean): Promise<Buffer>;
+  getFile<T extends boolean>(server: string, file: string, stream?: T): T extends true ? ReadableStream : Promise<Buffer>;
   getFiles(server: string, directory: string): Promise<File[]>;
   createFolder(server: string, directory: string): Promise<void>;
   moveFile(server: string, oldpath: string, newpath: string): Promise<void>;
   copyFile(server: string, oldpath: string, newpath: string): Promise<void>;
   renameFile(server: string, oldpath: string, newpath: string): Promise<void>;
-  deleteFile(server: string, directory: string): Promise<void>;  
+  deleteFile(server: string, path: string): Promise<void>;  
 }
 
 declare function OctyneApi(url: string, info: ClientInfo): Client

@@ -5,8 +5,8 @@
   "type": "commonjs",
   "main": "src/index.js",
   "exports": {
-    "import": "src/esm.mjs",
-    "require": "src/index.js"
+    "import": "./src/esm.mjs",
+    "require": "./src/index.js"
   },
   "typings": "./index.d.ts",
   "scripts": {
@@ -31,7 +31,8 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "isomorphic-unfetch": "^3.1.0",
+    "isomorphic-ws": "^4.0.1",
     "ws": "^7.3.1"
   }
 }

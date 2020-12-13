@@ -6,7 +6,7 @@ A Node.js API wrapper for retrixe/octyne.
 
 ## Installation
 
-octyne-api makes use of Promises and ES2015 classes and requires Node.js 8+.
+octyne-api makes use of Promises and ES2015 classes and requires Node.js 8+. It works on browser, if compiled by your bundler, apart from Client#openConsole, which requires you to set a cookie.
 
 ```bash
 npm install octyne-api
@@ -20,10 +20,10 @@ octyne-api is built around a Client class which performs all requests.
 
 ```js
 // Short program to get the uptime of a process running on an Octyne instance.
-const OctyneClient = require('octyne-api') // You can name it anything e.g. Client.
+const OctyneApi = require('octyne-api') // You can name it anything e.g. Client.
 const ms = require('ms')
 
-const client = new OctyneClient('http://localhost:42069', {
+const client = new OctyneApi('http://localhost:42069', {
   username: 'user', password: 'pass' // You can also pass a token for direct usage.
 })
 
@@ -62,4 +62,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
