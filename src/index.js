@@ -168,9 +168,9 @@ class Client {
   }
 }
 
-function OctyneClient(url, info) { // Avoid setting these properties on Client.
-    return new Client(url, info)
+function OctyneApi (url, info) { // Avoid setting these properties on Client.
+  return new Client(url, info)
 }
-OctyneClient.Client = Client
+OctyneApi.Client = Client
 
-module.exports = OctyneClient // Prefer importing it as OctyneApi, though.
+module.exports = OctyneApi

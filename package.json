@@ -10,7 +10,7 @@
   },
   "typings": "./index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint . --ext js,mjs"
   },
   "repository": {
     "type": "git",
@@ -35,4 +35,3 @@
     "ws": "^7.3.1"
   }
 }
-
