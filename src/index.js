@@ -6,15 +6,18 @@ const path = require('path')
  * The Octyne API client.
  * @property {Object} info An object containing the URL, username, password and token to Octyne.
  * @property {string} info.url The URL to the Octyne instance.
- * @property {string} [info.username] The username of the Octyne instance.
+ * @property {string} [info.username] The username of the Octyne user.
+ * @property {string} [info.password] The password of the Octyne user.
+ * @property {string} [info.token] The token of the Octyne user.
  */
 class Client {
   /**
    * The constructor for the Octyne API client.
+   * Requires either a username/password pair or a token.
    * @param {string} url The URL to the Octyne instance.
    * @param {Object} info An object containing either a username/password pair or an Octyne token.
-   * @param {string} info.username A string containing the username to log into Octyne with.
-   * @param {string} info.password A string containing the password to log into Octyne with.
+   * @param {string} [info.username] A string containing the username to log into Octyne with.
+   * @param {string} [info.password] A string containing the password to log into Octyne with.
    * @param {string} [info.token] A string containing the token to authenticate to Octyne with.
    */
   constructor (url, info) {
@@ -23,17 +26,19 @@ class Client {
       throw new Error('No username/password pair or token was provided!')
     }
     if (info.password) {
-      Object.defineProperty(this.info, '_password', {
+      Object.defineProperty(this.info, 'password', {
         value: info.password,
         enumerable: false,
-        configurable: true
+        configurable: true,
+        writable: true
       })
     }
     if (info.token) {
-      Object.defineProperty(this.info, '_token', {
+      Object.defineProperty(this.info, 'token', {
         value: info.token,
         enumerable: false,
-        configurable: true
+        configurable: true,
+        writable: true
       })
     }
   }
@@ -55,10 +60,10 @@ class Client {
   async login () {
     const res = await (await fetch(this.info.url + '/login', {
       method: 'POST',
-      headers: { Username: this.info.username, Password: this.info._password }
+      headers: { Username: this.info.username, Password: this.info.password }
     })).json()
     if (res.token) {
-      Object.defineProperty(this.info, '_token', {
+      Object.defineProperty(this.info, 'token', {
         value: res.token,
         enumerable: false,
         configurable: true
@@ -75,7 +80,7 @@ class Client {
   async logout () {
     const res = await this.request(this.info.url + '/logout', { method: 'POST' })
     if (res.success) {
-      delete this.info._token
+      delete this.info.token
     } else {
       throw new Error(res.error)
     }
@@ -90,7 +95,7 @@ class Client {
     const url = this.info.url
     return new Promise((resolve, reject) => {
       const ws = new WebSocket(url + '/server/' + server + '/console', undefined, {
-        headers: { authorization: this.info._token } // TODO: Support WS on browser.
+        headers: { authorization: this.info.token } // TODO: Support WS on browser.
       })
       let open = false
       ws.onopen = () => {
@@ -136,10 +141,10 @@ class Client {
    */
   async getFile (server, file, stream) {
     const path = encodeURIComponent(file)
-    if (this.info._token) {
+    if (this.info.token) {
       const req = await fetch(this.info.url + '/server/' + server + '/file?path=' + path, {
         method: 'GET',
-        headers: { authorization: this.info._token }
+        headers: { authorization: this.info.token }
       })
       if (stream) {
         return req.body
@@ -264,10 +269,10 @@ class Client {
    * @returns {Promise<Object>} A Promise containing the JSON response.
    */
   async request (endpoint, options) {
-    if (this.info._token) {
+    if (this.info.token) {
       return fetch(endpoint, {
         ...(options || {}),
-        headers: Object.assign({ Authorization: this.info._token }, options && options.headers)
+        headers: Object.assign({ Authorization: this.info.token }, options && options.headers)
       }).then(res => res.json())
     } else {
       throw new Error('No token is present in the client. Have you logged in with client.login()?')
@@ -277,6 +282,7 @@ class Client {
 
 /**
  * A function to initialise an Octyne API {Client}.
+ * Requires either a username/password pair or a token.
  * @param {String} url The URL to the Octyne instance.
  * @param {Object} info An object containing either a username/password pair or an Octyne token.
  * @param {String} info.username A string containing the username to log into Octyne with.

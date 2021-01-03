@@ -2,7 +2,8 @@ import WebSocket from 'ws'
 import { RequestInit } from 'node-fetch'
 
 export type ServerStatus = 0 | 1 | 2
-export type ClientInfo = { username: string, password: string } | { token: string }
+export type ClientInfoParam = { username: string, password: string } | { token: string }
+export type ClientInfo = { url: string, username?: string, password?: string, token?: string }
 export interface Server {
   status: number,
   uptime: number,
@@ -20,7 +21,8 @@ export interface File {
 }
 
 export class Client {
-  constructor(url: string, info: ClientInfo);
+  constructor(url: string, info: ClientInfoParam);
+  info: ClientInfo;
   login(): Promise<void>;
   logout(): Promise<void>;
   request(endpoint: string, options?: RequestInit): Promise<object>;
@@ -40,6 +42,6 @@ export class Client {
   deleteFile(server: string, path: string): Promise<void>;  
 }
 
-declare function OctyneApi(url: string, info: ClientInfo): Client
+declare function OctyneApi(url: string, info: ClientInfoParam): Client
 
 export = OctyneApi
