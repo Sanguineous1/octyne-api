@@ -1,6 +1,5 @@
 const WebSocket = require('isomorphic-ws')
 const fetch = require('isomorphic-unfetch')
-const path = require('path')
 
 /**
  * The Octyne API client.
@@ -229,8 +228,8 @@ class Client {
    * @returns {Promise<void>} A Promise which resolves on success and rejects on failure.
    */
   renameFile (server, oldpath, newname) {
-    const newName = path.join(oldpath, '..', newname)
-    return this.moveFile(server, oldpath, newName)
+    const newpath = oldpath.substring(0, oldpath.lastIndexOf('/') + 1) + newname
+    return this.moveFile(server, oldpath, newpath)
   }
 
   /**
