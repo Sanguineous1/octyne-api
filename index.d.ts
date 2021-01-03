@@ -26,12 +26,13 @@ export class Client {
   login(): Promise<void>;
   logout(): Promise<void>;
   request(endpoint: string, options?: RequestInit): Promise<object>;
+  getTicket(): Promise<string>;
   getServer(server: string): Promise<Server>;
   getServers(): Promise<Array<{ [name: string]: ServerStatus }>>;
 
   startServer(server: string): Promise<void>;
   stopServer(server: string): Promise<void>;
-  openConsole(server: string): Promise<WebSocket>;
+  openConsole(server: string, ticket?: string | boolean): Promise<WebSocket>;
 
   getFile<T extends boolean>(server: string, file: string, stream?: T): T extends true ? ReadableStream : Promise<Buffer>;
   getFiles(server: string, directory: string): Promise<File[]>;

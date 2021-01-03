@@ -18,12 +18,14 @@ yarn add octyne-api
 
 octyne-api is built around a Client class which performs all requests.
 
+[View the docs for the latest release here.](https://github.com/Sanguineous1/octyne-api/wiki/Docs)
+
 ```js
 // Short program to get the uptime of a process running on an Octyne instance.
 const OctyneApi = require('octyne-api') // You can name it anything e.g. Client.
 const ms = require('ms')
 
-const client = new OctyneApi('http://localhost:42069', {
+const client = OctyneApi('http://localhost:42069', {
   username: 'user', password: 'pass' // You can also pass a token for direct usage.
 })
 
@@ -35,7 +37,7 @@ client.login().then(async () => {
 
 ```
 
-[For a full list of methods and properties available, look at the typings file.](https://github.com/Sanguineous1/octyne-api/blob/master/index.d.ts)
+For a full list of methods and properties available on the `master` branch, you can also look at the typings file [here.](https://github.com/Sanguineous1/octyne-api/blob/master/index.d.ts)
 
 ## License
 

@@ -86,15 +86,38 @@ class Client {
   }
 
   /**
+   * Returns an Octyne one-time ticket which is used for console/file downloads on browser.
+   * They expire within 120 seconds and can only be used by the IP address that requested it.
+   * @returns {Promise<string>} A Promise which resolves with a string containing the ticket.
+   */
+  async getTicket () {
+    const res = await this.request(this.info.url + '/ott')
+    if (res.ticket) {
+      return res.ticket
+    } else {
+      throw new Error(res.error)
+    }
+  }
+
+  /**
    * Connects to the console of a process running on Octyne, and returns a WebSocket connection in a Promise.
    * @param {string} server The name of the Octyne server, which console is to be connected to.
+   * @param {string|boolean} [ticket] If an Octyne ticket should be used. If a string is passed, it is used as ticket.
+   * Default: window !== 'undefined'
    * @returns {Promise<WebSocket>} A Promise which resolves with a WebSocket when the connection succeeds.
    */
-  async openConsole (server) {
+  async openConsole (server, ticket) {
     const url = this.info.url
+    let ticketStr = ''
+    if (typeof ticket === 'string') {
+      ticketStr = ticket
+    } else if (typeof ticket === 'boolean' ? ticket : typeof window !== 'undefined') {
+      ticketStr = await this.getTicket()
+    }
+    const query = ticketStr && '?ticket=' + ticketStr
     return new Promise((resolve, reject) => {
-      const ws = new WebSocket(url + '/server/' + server + '/console', undefined, {
-        headers: { authorization: this.info.token } // TODO: Support WS on browser.
+      const ws = new WebSocket(url + '/server/' + server + '/console' + query, undefined, {
+        headers: { authorization: this.info.token } // This is ignored on browser.
       })
       let open = false
       ws.onopen = () => {
@@ -284,8 +307,8 @@ class Client {
  * Requires either a username/password pair or a token.
  * @param {String} url The URL to the Octyne instance.
  * @param {Object} info An object containing either a username/password pair or an Octyne token.
- * @param {String} info.username A string containing the username to log into Octyne with.
- * @param {String} info.password A string containing the password to log into Octyne with.
+ * @param {String} [info.username] A string containing the username to log into Octyne with.
+ * @param {String} [info.password] A string containing the password to log into Octyne with.
  * @param {String} [info.token] A string containing the token to authenticate to Octyne with.
  * @returns {Client} Returns an Octyne API {Client}.
  */
