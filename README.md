@@ -1,12 +1,12 @@
 # octyne-api
 
-[![requires node.js: >=10](https://img.shields.io/badge/requires%20node.js-%3E%3D10-brightgreen?style=flat-square&logo=node.js&logoColor=76D04B)](https://nodejs.org/en/download) [![browsers: Edge 15+, Firefox 52+, Chrome 55+ and Safari 11+](https://img.shields.io/badge/browsers-Edge%2015%2B%2C%20Firefox%2052%2B%2C%20Chrome%2055%2B%20and%20Safari%2011%2B-aqua?style=flat-square&logo=javascript&logoColor=aqua)](https://shields.io/)
+[![requires node.js: >=10](https://img.shields.io/badge/requires%20node.js-%3E%3D10-brightgreen?style=flat-square&logo=node.js&logoColor=76D04B)](https://nodejs.org/en/download) [![requires browsers: >= Edge 15, Firefox 52, Chrome 55 or Safari 11](https://img.shields.io/badge/requires%20browsers-%3E%3D%20Edge%2015%2C%20Firefox%2052%2C%20Chrome%2055%20or%20Safari%2011-aqua?style=flat-square&logo=javascript&logoColor=aqua)](https://shields.io/) [![octyne-api/ie9 requires: at least Internet Explorer 9](https://img.shields.io/badge/octyne--api%2Fie9%20requires-at%20least%20Internet%20Explorer%209-aqua?style=flat-square&logo=internet-explorer&logoColor=aqua)](https://shields.io/)
 
-A Node.js API wrapper for retrixe/octyne.
+A JavaScript API wrapper for retrixe/octyne.
 
 ## Installation
 
-octyne-api makes use of Promises and ES2015 classes and requires Node.js 8+ (only 10+ is officially supported) or a browser that supports ES2015 (classes, Promises and async functions) which include all modern evergreen browsers. You can use Babel+polyfills to run it on older browsers like Internet Explorer 9.
+octyne-api makes use of `Promise`s, async functions and ES2015 classes, and thus requires Node.js 8+ (only 10+ is officially supported) or a modern evergreen browser. However, you can import `octyne-api/ie9` to use the library on older browsers like Internet Explorer 9 (requires a polyfill like `core-js`).
 
 ```bash
 npm install octyne-api

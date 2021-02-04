@@ -1,5 +1,5 @@
-const WebSocket = require('isomorphic-ws')
-const fetch = require('isomorphic-unfetch')
+import WebSocket from 'isomorphic-ws'
+import fetch from 'isomorphic-unfetch'
 
 /**
  * The Octyne API client.
@@ -9,7 +9,7 @@ const fetch = require('isomorphic-unfetch')
  * @property {string} [info.password] The password of the Octyne user.
  * @property {string} [info.token] The token of the Octyne user.
  */
-class Client {
+export class Client {
   /**
    * The constructor for the Octyne API client.
    * Requires either a username/password pair or a token.
@@ -315,6 +315,5 @@ class Client {
 function OctyneApi (url, info) { // Avoid setting these properties on Client.
   return new Client(url, info)
 }
-OctyneApi.Client = Client
 
-module.exports = OctyneApi
+export default OctyneApi

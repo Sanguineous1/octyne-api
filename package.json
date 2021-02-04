@@ -3,16 +3,22 @@
   "version": "1.0.0-beta.2",
   "description": "A Node.js API wrapper for retrixe/octyne.",
   "type": "commonjs",
-  "main": "src/index.js",
-  "module": "src/esm.mjs",
+  "main": "dist/index.js",
+  "module": "src/index.mjs",
+  "browser": "src/index.mjs",
+  "sideEffects": false,
   "exports": {
-    "import": "./src/esm.mjs",
-    "require": "./src/index.js"
+    "import": "./src/index.mjs",
+    "require": "./dist/index.js"
   },
   "typings": "./index.d.ts",
   "scripts": {
     "docs": "jsdoc2md src/*.js",
-    "lint": "eslint . --ext js,mjs"
+    "lint": "eslint . --ext js,mjs",
+    "build": "yarn build:ie9 && yarn build:cjs",
+    "build:ie9": "babel src --out-dir ie9 --source-maps inline",
+    "build:cjs": "babel --no-babelrc --plugins @babel/plugin-transform-modules-commonjs src --out-dir dist --source-maps inline",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
@@ -25,6 +31,10 @@
   },
   "homepage": "https://github.com/Sanguineous1/octyne-api#readme",
   "devDependencies": {
+    "@babel/cli": "^7.12.13",
+    "@babel/core": "^7.12.13",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
     "eslint": "^7.4.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
