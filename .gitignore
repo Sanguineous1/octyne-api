@@ -1,7 +1,7 @@
-# Internet Explorer 9 and CommonJS bundles.
+# Generated JSDoc, Internet Explorer 9 and CommonJS bundles.
 ie9/
 dist/
-
+/DOCS.md
 # Logs
 logs
 *.log

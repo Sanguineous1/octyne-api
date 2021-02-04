@@ -3,13 +3,14 @@ import fetch from 'isomorphic-unfetch'
 
 /**
  * The Octyne API client.
+ * @alias Client
  * @property {Object} info An object containing the URL, username, password and token to Octyne.
  * @property {string} info.url The URL to the Octyne instance.
  * @property {string} [info.username] The username of the Octyne user.
  * @property {string} [info.password] The password of the Octyne user.
  * @property {string} [info.token] The token of the Octyne user.
  */
-export class Client {
+class OctyneClient {
   /**
    * The constructor for the Octyne API client.
    * Requires either a username/password pair or a token.
@@ -301,7 +302,7 @@ export class Client {
     }
   }
 }
-
+export const Client = OctyneClient
 /**
  * A function to initialise an Octyne API {Client}.
  * Requires either a username/password pair or a token.
