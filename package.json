@@ -4,6 +4,7 @@
   "description": "A Node.js API wrapper for retrixe/octyne.",
   "type": "commonjs",
   "main": "src/index.js",
+  "module": "src/esm.mjs",
   "exports": {
     "import": "./src/esm.mjs",
     "require": "./src/index.js"
@@ -29,7 +30,8 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "jsdoc-to-markdown": "^6.0.1"
   },
   "dependencies": {
     "isomorphic-unfetch": "^3.1.0",
