@@ -20,6 +20,12 @@ export interface File {
   lastModified: number
 }
 
+export class OctyneError extends Error {
+  constructor(message: string, code: number);
+  name: 'OctyneError';
+  format(): string;
+}
+
 export class Client {
   constructor(url: string, info: ClientInfoParam);
   info: ClientInfo;

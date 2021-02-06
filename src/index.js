@@ -1,6 +1,8 @@
 import WebSocket from 'isomorphic-ws'
 import fetch from 'isomorphic-unfetch'
 
+import OctyneError from './error'
+
 /**
  * The Octyne API client.
  * @alias Client
@@ -58,10 +60,11 @@ class OctyneClient {
    * @returns {Promise<void>} A Promise which resolves when login succeeds, and rejects if failed.
    */
   async login () {
-    const res = await (await fetch(this.info.url + '/login', {
+    const req = await fetch(this.info.url + '/login', {
       method: 'POST',
       headers: { Username: this.info.username, Password: this.info.password }
-    })).json()
+    })
+    const res = req.json()
     if (res.token) {
       Object.defineProperty(this.info, 'token', {
         value: res.token,
@@ -69,7 +72,7 @@ class OctyneClient {
         configurable: true
       })
     } else {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, req.status)
     }
   }
 
@@ -82,7 +85,7 @@ class OctyneClient {
     if (res.success) {
       delete this.info.token
     } else {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -96,7 +99,7 @@ class OctyneClient {
     if (res.ticket) {
       return res.ticket
     } else {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -139,7 +142,7 @@ class OctyneClient {
   async startServer (server) {
     const res = await this.request(this.info.url + '/server/' + server, { method: 'POST', body: 'start' })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -151,7 +154,7 @@ class OctyneClient {
   async stopServer (server) {
     const res = await this.request(this.info.url + '/server/' + server, { method: 'POST', body: 'stop' })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -159,7 +162,8 @@ class OctyneClient {
    * Get a file from an Octyne server process directory.
    * @param {string} server The name of the Octyne server from which to get the file.
    * @param {string} file The path to the file to download.
-   * @param {boolean} stream Whether or not to return a ReadableStream (performant for large files.)
+   * @param {boolean} stream Whether or not to return a ReadableStream (performant for large files).
+   * If Octyne responds with an non-2xx HTTP status code, this option will be ignored.
    * @returns {Promise<Buffer>|ReadableStream} A ReadableStream if stream is true, else a Promise with a Buffer, with the file data.
    */
   async getFile (server, file, stream) {
@@ -169,14 +173,14 @@ class OctyneClient {
         method: 'GET',
         headers: { authorization: this.info.token }
       })
-      if (stream) {
+      if (stream && req.ok) {
         return req.body
       }
       const buffer = await req.buffer()
       if (req.ok) return buffer
       const json = JSON.parse(buffer.toString('utf8'))
       if (json && json.error) {
-        throw new Error(json.error)
+        throw new OctyneError(json.error, req.status)
       }
       return buffer
     } else {
@@ -198,7 +202,7 @@ class OctyneClient {
     if (res.contents) {
       return res
     } else {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -212,7 +216,7 @@ class OctyneClient {
     const dir = encodeURIComponent(directory)
     const res = await this.request(this.info.url + '/server/' + server + '/folder?path=' + dir, { method: 'POST' })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -226,7 +230,7 @@ class OctyneClient {
   async moveFile (server, oldpath, newpath) {
     const res = await this.request(this.info.url + '/server/' + server + '/file', { method: 'PATCH', body: `mv\n${oldpath}\n${newpath}` })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -240,7 +244,7 @@ class OctyneClient {
   async copyFile (server, oldpath, newpath) {
     const res = await this.request(this.info.url + '/server/' + server + '/file', { method: 'PATCH', body: `cp\n${oldpath}\n${newpath}` })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -266,7 +270,7 @@ class OctyneClient {
     const dir = encodeURIComponent(path)
     const res = await this.request(this.info.url + '/server/' + server + '/file?path=' + dir, { method: 'DELETE' })
     if (res.error) {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -281,7 +285,7 @@ class OctyneClient {
     if (res.status) {
       return res
     } else {
-      throw new Error(res.error)
+      throw new OctyneError(res.error, res.code)
     }
   }
 
@@ -296,7 +300,8 @@ class OctyneClient {
       return fetch(endpoint, {
         ...(options || {}),
         headers: Object.assign({ Authorization: this.info.token }, options && options.headers)
-      }).then(res => res.json())
+      }).then(res => [res, res.json()])
+        .then(arr => arr[0].ok ? arr[1] : { code: arr[0].status, ...arr[1] })
     } else {
       throw new Error('No token is present in the client. Have you logged in with client.login()?')
     }
@@ -316,5 +321,5 @@ export const Client = OctyneClient
 function OctyneApi (url, info) { // Avoid setting these properties on Client.
   return new Client(url, info)
 }
-
+export { default as OctyneError } from './error'
 export default OctyneApi
