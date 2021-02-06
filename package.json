@@ -4,11 +4,11 @@
   "description": "A Node.js API wrapper for retrixe/octyne.",
   "type": "module",
   "main": "dist/index.js",
-  "module": "src/index.mjs",
-  "browser": "src/index.mjs",
+  "module": "src/index.js",
+  "browser": "src/index.js",
   "sideEffects": false,
   "exports": {
-    "import": "./src/index.mjs",
+    "import": "./src/index.js",
     "require": "./dist/index.js"
   },
   "typings": "./index.d.ts",
