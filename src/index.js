@@ -64,7 +64,7 @@ class OctyneClient {
       method: 'POST',
       headers: { Username: this.info.username, Password: this.info.password }
     })
-    const res = req.json()
+    const res = await req.json()
     if (res.token) {
       Object.defineProperty(this.info, 'token', {
         value: res.token,
