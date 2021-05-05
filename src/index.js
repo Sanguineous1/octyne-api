@@ -52,7 +52,12 @@ class OctyneClient {
    * @returns {Object} Returns an object containing server names as keys, and a number as value.
    */
   async getServers () {
-    return await this.request(this.info.url + '/servers', { method: 'GET' })
+    const res = await this.request(this.info.url + '/servers', { method: 'GET' })
+    if (res.servers) {
+      return res
+    } else {
+      throw new OctyneError(res.error, res.code)
+    }
   }
 
   /**

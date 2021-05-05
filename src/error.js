@@ -21,6 +21,13 @@ class OctyneError extends Error {
   format () {
     return `${this.message} (${this.code})`
   }
+
+  /**
+   * @returns {string} The error in string format.
+   */
+  toString () {
+    return this.format()
+  }
 }
 
 export default OctyneError
