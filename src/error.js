@@ -10,23 +10,9 @@ class OctyneError extends Error {
    * @param {number} code The HTTP response code sent by Octyne.
    */
   constructor (message, code) {
-    super(message)
+    super(message + ' (HTTP ' + code + ')')
     this.code = code
     this.name = 'OctyneError'
-  }
-
-  /**
-   * @returns {string} The error in string format.
-   */
-  format () {
-    return `${this.message} (${this.code})`
-  }
-
-  /**
-   * @returns {string} The error in string format.
-   */
-  toString () {
-    return this.format()
   }
 }
 

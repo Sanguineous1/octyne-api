@@ -305,7 +305,7 @@ class OctyneClient {
       return fetch(endpoint, {
         ...(options || {}),
         headers: Object.assign({ Authorization: this.info.token }, options && options.headers)
-      }).then(res => [res, res.json()])
+      }).then(res => [res, res.json()]) // TODO: Throw an OctyneError instead? What about array resps.
         .then(arr => arr[0].ok ? arr[1] : { code: arr[0].status, ...arr[1] })
     } else {
       throw new Error('No token is present in the client. Have you logged in with client.login()?')
