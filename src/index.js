@@ -1,7 +1,7 @@
 import WebSocket from 'isomorphic-ws'
 import fetch from 'isomorphic-unfetch'
 
-import OctyneError from './error'
+import OctyneError from './error.js'
 
 /**
  * The Octyne API client.
@@ -326,5 +326,5 @@ export const Client = OctyneClient
 function OctyneApi (url, info) { // Avoid setting these properties on Client.
   return new Client(url, info)
 }
-export { default as OctyneError } from './error'
+export { default as OctyneError } from './error.js'
 export default OctyneApi
