@@ -1,6 +1,6 @@
 {
   "name": "octyne-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Node.js API wrapper for retrixe/octyne.",
   "type": "module",
   "main": "dist/index.js",

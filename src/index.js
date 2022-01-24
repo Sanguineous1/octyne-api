@@ -1,7 +1,7 @@
 import WebSocket from 'isomorphic-ws'
 import fetch from 'isomorphic-unfetch'
 
-import OctyneError from './error'
+import OctyneError from './error.js'
 
 /**
  * The Octyne API client.
